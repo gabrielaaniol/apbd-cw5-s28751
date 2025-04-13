@@ -144,7 +144,9 @@ public class AdvancedEmpDeptTests
     }
 
     // 20. Join all three: Emp → Dept → Salgrade
-    // SQL: SELECT E.EName, D.DName, S.Grade FROM Emp E JOIN Dept D ON E.DeptNo = D.DeptNo JOIN Salgrade S ON E.Sal BETWEEN S.Losal AND S.Hisal;
+    // SQL: SELECT E.EName, D.DName, S.Grade
+    // FROM Emp E JOIN Dept D ON E.DeptNo = D.DeptNo
+    // JOIN Salgrade S ON E.Sal BETWEEN S.Losal AND S.Hisal;
     [Fact]
     public void ShouldJoinEmpDeptSalgrade()
     {
@@ -152,8 +154,36 @@ public class AdvancedEmpDeptTests
         var depts = Database.GetDepts();
         var grades = Database.GetSalgrades();
 
-        // var result = null; 
-        //
-        // Assert.Contains(result, r => r.EName == "ALLEN" && r.DName == "SALES" && r.Grade == 3);
+        var result = emps
+            .Join(depts,
+                emp => emp.DeptNo,
+                dept => dept.DeptNo,
+                (emp, dept) => new
+                {
+                    emp, dept
+                }
+                )
+            .SelectMany(
+                ed => grades,
+                (ed, grade) => new
+                {
+                    ed.emp.EName,
+                    ed.dept.DName,
+                    Grade = grade.Grade,
+                    ed.emp.Sal,
+                    Losal = grade.Losal,
+                    Hisal = grade.Hisal
+                })
+            .Where(x => x.Sal >= x.Losal && x.Sal <= x.Hisal)
+            .Select(x => new
+                {
+                    x.EName,
+                    x.DName,
+                    x.Grade
+                }
+            )
+            .ToList();
+        
+        Assert.Contains(result, r => r.EName == "ALLEN" && r.DName == "SALES" && r.Grade == 3);
     }
 }
