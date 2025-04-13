@@ -50,15 +50,21 @@
           "dependencies": {
             "Microsoft.NET.Test.Sdk": {
               "target": "Package",
-              "version": "[17.11.1, )"
+              "version": "[17.14.0-preview-25107-01, )"
             },
             "coverlet.collector": {
               "target": "Package",
               "version": "[6.0.2, )"
             },
+            "more.xunit.runner.visualstudio": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.3.1, )"
+            },
             "xunit": {
               "target": "Package",
-              "version": "[2.9.2, )"
+              "version": "[2.9.3, )"
             },
             "xunit.runner.visualstudio": {
               "target": "Package",
