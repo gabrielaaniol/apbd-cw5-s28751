@@ -189,8 +189,17 @@ public class EmpDeptSalgradeTests
     {
         var emps = Database.GetEmps();
 
-        // var result = null; 
-        //
-        // Assert.Contains("ALLEN", result);
+        //srednia pensja dla kazdego dzialu (obliczamy najpierw)
+        var avgSalaries = emps
+            .GroupBy(e => e.DeptNo)
+            .ToDictionary(g => g.Key, g => g.Average(e => e.Sal));
+        
+        //szukamy tych ktorych pensja jest wieksza niz srednia w ich dziale
+        var result = emps
+            .Where(e => e.Sal > avgSalaries[e.DeptNo])
+            .Select(e => e.EName)
+            .ToList();
+        
+        Assert.Contains("ALLEN", result);
     }
 }
