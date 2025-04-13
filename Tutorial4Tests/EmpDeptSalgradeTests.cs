@@ -89,9 +89,20 @@ public class EmpDeptSalgradeTests
         var emps = Database.GetEmps();
         var depts = Database.GetDepts();
 
-        //var result = null; 
+        //join - dopasowanie dzialu do pracownika
+        
+        var result = emps
+            .Join(depts, 
+                e => e.DeptNo,      //klucz emp
+                d => d.DeptNo,      //klucz dept
+                (e, d) => new   //wynik po polaczeniu
+                {
+                    e.EName,
+                    d.DName
+                })
+            .ToList();
 
-        //Assert.Contains(result, r => r.DName == "SALES" && r.EName == "ALLEN");
+        Assert.Contains(result, r => r.DName == "SALES" && r.EName == "ALLEN");
     }
 
     // 6. Group by DeptNo
