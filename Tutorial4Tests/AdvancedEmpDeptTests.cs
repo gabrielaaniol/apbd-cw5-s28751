@@ -108,9 +108,20 @@ public class AdvancedEmpDeptTests
     {
         var emps = Database.GetEmps();
 
-        // var result = null;
-        //
-        // Assert.Contains(result, r => r.Employee == "SMITH" && r.Manager == "FORD");
+        //SELF-JOIN dopasowanie kazdego pracownika do jego managera jezeli go ma
+        var result = emps
+            .Where(e => e.Mgr != null)      //najpierw tylko dla tych ktorzy maja przelozonego
+            .Join(emps, 
+                emp => emp.Mgr,             //id przelozonego
+                mgr => mgr.EmpNo,      //numer pracownika
+                (emp, mgr) => new           //para: prac - mgr
+                {
+                    Employee = emp.EName,
+                    Manager = mgr.EName
+                })
+            .ToList();
+        
+        Assert.Contains(result, r => r.Employee == "SMITH" && r.Manager == "FORD");
     }
 
     // 19. Let clause usage (sal + comm)
