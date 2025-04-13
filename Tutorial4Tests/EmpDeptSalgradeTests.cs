@@ -147,9 +147,20 @@ public class EmpDeptSalgradeTests
         var emps = Database.GetEmps();
         var grades = Database.GetSalgrades();
 
-        // var result = null;
-        //
-        // Assert.Contains(result, r => r.EName == "ALLEN" && r.Grade == 3);
+        var result = emps
+            .SelectMany(e => grades, (e, g) => new
+            {
+                e.EName,
+                Grade = g.Grade,
+                e.Sal,
+                Losal = g.Losal,
+                Hisal = g.Hisal
+            })
+            .Where(x => x.Sal >= x.Losal && x.Sal <= x.Hisal)
+            .Select(x => new {x.EName, x.Grade})
+            .ToList();
+        
+        Assert.Contains(result, r => r.EName == "ALLEN" && r.Grade == 3);
     }
 
     // 9. Aggregation (AVG)
