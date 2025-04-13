@@ -9,7 +9,8 @@ public class AdvancedEmpDeptTests
     {
         var emps = Database.GetEmps();
 
-        decimal? maxSalary = null; 
+        //szukam najwyzszej pensji wsrod wszystkich pracownikow
+        decimal? maxSalary = emps.Max(e => e.Sal);
 
         Assert.Equal(5000, maxSalary);
     }
