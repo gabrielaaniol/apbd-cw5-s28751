@@ -131,9 +131,16 @@ public class AdvancedEmpDeptTests
     {
         var emps = Database.GetEmps();
 
-        // var result = null; 
-        //
-        // Assert.Contains(result, r => r.EName == "ALLEN" && r.Total == 1900);
+        //obliczam calkowity dochod czyli pensja i prowizja jesli jest
+        var result = emps
+            .Select(e => new
+            {
+                e.EName,
+                Total = e.Sal + (e.Comm ?? 0)       //jesli comm == null uzyje 0
+            })
+            .ToList();
+        
+        Assert.Contains(result, r => r.EName == "ALLEN" && r.Total == 1900);
     }
 
     // 20. Join all three: Emp → Dept → Salgrade
